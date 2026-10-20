@@ -19,13 +19,77 @@
 <nav class="bottom"><button class="nav active" data-view="scores" onclick="showView('scores',this)"><span class="ico">🏏</span>Scores</button><button class="nav" data-view="favourites" onclick="showView('favourites',this)"><span class="ico">☆</span>Following</button><button class="nav" data-view="settings" onclick="showView('settings',this)"><span class="ico">⚙</span>Settings</button><button class="nav" onclick="alert('Boundary is designed to have no ads, no pop-ups and no tracking for ad targeting.')"><span class="ico">♡</span>About</button></nav>
 </main>
 <script>
-const matches=[
-{id:1,filter:'Live',format:'T20 · INTERNATIONAL',series:'Tri-Series · Match 4',status:'LIVE',a:'India',af:'🇮🇳',as:'176/4',ao:'18.2 overs',b:'South Africa',bf:'🇿🇦',bs:'Yet to bat',bo:'',summary:'India need a strong finish',detail:'India need 18 runs from 10 balls',fav:true,comments:[['18.2','4','FOUR! Driven through extra cover. A crisp shot finds the boundary.'],['18.1','1','Worked into the leg side for a single.'],['17.6','6','SIX! Picked up over deep midwicket. Huge hit!'],['17.5','0','Good length, defended back to the bowler.']]},
-{id:2,filter:'Live',format:'TEST · INTERNATIONAL',series:'Test Championship · Day 2',status:'LIVE',a:'England',af:'🏴',as:'284/7',ao:'82.4 overs',b:'Australia',bf:'🇦🇺',bs:'312 all out',bo:'',summary:'England trail by 28 runs',detail:'England trail by 28 runs in the first innings',fav:false,comments:[['82.4','1','Pushed to cover, they take a quick single.'],['82.3','0','Beaten outside off stump.'],['82.2','2','Clipped off the pads for two runs.']]},
-{id:3,filter:'Live',format:'T20 · LEAGUE',series:'Global T20 League · Match 12',status:'LIVE',a:'Sydney Sixers',af:'🩷',as:'92/2',ao:'10.1 overs',b:'Perth Scorchers',bf:'🟠',bs:'Yet to bat',bo:'',summary:'Powerplay completed',detail:'Sydney Sixers looking to build a big total',fav:false,comments:[['10.1','1','Single taken to long-on.'],['10.0','4','FOUR! Short and punished behind square.']]},
-{id:4,filter:'Upcoming',format:'ODI · INTERNATIONAL',series:'International Series · 1st ODI',status:'UPCOMING',a:'New Zealand',af:'🇳🇿',as:'—',ao:'Today · 2:00 PM IST',b:'Pakistan',bf:'🇵🇰',bs:'—',bo:'',summary:'Starts in 2h 15m',detail:'Toss and playing XIs will appear when available',fav:true,comments:[]},
-{id:5,filter:'Upcoming',format:'T20 · WOMEN',series:'Women’s T20 · Match 8',status:'UPCOMING',a:'India Women',af:'🇮🇳',as:'—',ao:'Tomorrow · 7:00 PM IST',b:'Australia Women',bf:'🇦🇺',bs:'—',bo:'',summary:'Tomorrow · 7:00 PM IST',detail:'Match preview will appear closer to start',fav:false,comments:[]},
-{id:6,filter:'Results',format:'T20 · INTERNATIONAL',series:'International Series · 3rd T20I',status:'RESULT',a:'West Indies',af:'🇯🇲',as:'189/6',ao:'20 overs',b:'Sri Lanka',bf:'🇱🇰',bs:'172/9',bo:'20 overs',summary:'West Indies won by 17 runs',detail:'West Indies won by 17 runs',fav:false,comments:[]}
+const matches=[const API_URL = 'https://boundary-cricket-api.santhoshselvamr.workers.dev/api/live';
+
+let matches = [];
+let filter = 'Live';
+let selected = null;
+let detailTab = 'Commentary';
+
+function mapApiMatches(payload) {
+  return (payload.data || []).map((m, i) => {
+    const score = m.score || '';
+    const parts = score.match(/^(.*?)\s+(\d+\/\d+)(?:\s+\(([^)]*)\))?/);
+    const teamA = m.team_a || 'Team A';
+    const teamB = m.team_b || 'Team B';
+
+    return {
+      id: m.match_id ?? i,
+      filter: /progress|live/i.test(m.state || '')
+        ? 'Live'
+        : /complete|result|won|finished/i.test(m.state || '')
+          ? 'Results' : 'Upcoming',
+      format: (m.format || 'CRICKET').toUpperCase(),
+      series: m.series_name || m.match_desc || 'Cricket match',
+      status: /progress|live/i.test(m.state || '')
+        ? 'LIVE'
+        : /complete|result|won|finished/i.test(m.state || '')
+          ? 'RESULT' : 'UPCOMING',
+      a: teamA,
+      af: '🏏',
+      as: parts ? parts[2] : score || '—',
+      ao: parts && parts[3] ? parts[3] : '',
+      b: teamB,
+      bf: '🏏',
+      bs: '—',
+      bo: '',
+      summary: m.live_inning || m.state || 'Match details',
+      detail: score || m.state || 'Live match information',
+      fav: false,
+      comments: [],
+      rawScore: score
+    };
+  });
+}
+
+async function loadLiveMatches() {
+  const list = document.getElementById('matchList');
+  list.innerHTML = '<div class="empty">Loading live matches…</div>';
+
+  try {
+    const response = await fetch(API_URL);
+    if (!response.ok) throw new Error('API request failed');
+
+    const payload = await response.json();
+    if (!payload.success || !Array.isArray(payload.data)) {
+      throw new Error('Unexpected API response');
+    }
+
+    matches = mapApiMatches(payload);
+    document.querySelector('.section-head small').textContent =
+      'Live data · CricketLiveAPI';
+    document.querySelector('.notice').textContent =
+      'Scores provided by CricketLiveAPI. Data refreshes periodically.';
+
+    render();
+  } catch (error) {
+    list.innerHTML =
+      '<div class="empty">Could not load live scores. Please try again.</div>';
+    document.querySelector('.section-head small').textContent =
+      'Connection error';
+  }
+}
+  
 ];let filter='Live',selected=1,detailTab='Commentary';
 function render(){const arr=matches.filter(m=>m.filter===filter);document.getElementById('listTitle').textContent=filter==='Live'?'Live matches':filter==='Upcoming'?'Upcoming matches':'Recent results';document.getElementById('matchList').innerHTML=arr.length?arr.map(m=>`<article class="match" onclick="openMatch(${m.id})"><div class="matchtop"><span>${m.format}</span><span class="${m.status==='LIVE'?'livebadge':''}">${m.status==='LIVE'?'● LIVE':m.status}</span></div><div class="teams"><div><div class="team"><div class="flag">${m.af}</div><div class="teamname">${m.a}</div></div><div class="team"><div class="flag">${m.bf}</div><div class="teamname">${m.b}</div></div></div><div><div class="score">${m.as}</div><div class="overs">${m.ao}</div><div class="score" style="margin-top:18px">${m.bs}</div><div class="overs">${m.bo}</div></div></div><div class="matchfoot"><span>${m.series}</span><strong>${m.summary}</strong></div></article>`).join(''):'<div class="empty">No matches in this section yet.</div>';renderFavourites()}
 function setFilter(f,el){filter=f;document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===el));render()}
