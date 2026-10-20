@@ -18,8 +18,10 @@
 <section id="settingsView" class="view"><div class="settings"><h2>Preferences</h2><p style="color:var(--muted)">Make cricket work for you.</p><div class="toggleline"><div><b>Match notifications</b><span>Get alerts for followed matches</span></div><button class="switch on" id="globalNotify" onclick="toggleSwitch(this)"></button></div><div class="toggleline"><div><b>Wicket alerts</b><span>Notify when a wicket falls</span></div><button class="switch on" onclick="toggleSwitch(this)"></button></div><div class="toggleline"><div><b>Match start reminders</b><span>Get notified before play begins</span></div><button class="switch" onclick="toggleSwitch(this)"></button></div><div class="toggleline"><div><b>Ads</b><span>Boundary will stay ad-free</span></div><b style="color:var(--green)">OFF FOREVER</b></div><p class="smallprint">Boundary prototype v0.1<br>Sample match data only. Live data requires a licensed provider.</p></div></section>
 <nav class="bottom"><button class="nav active" data-view="scores" onclick="showView('scores',this)"><span class="ico">🏏</span>Scores</button><button class="nav" data-view="favourites" onclick="showView('favourites',this)"><span class="ico">☆</span>Following</button><button class="nav" data-view="settings" onclick="showView('settings',this)"><span class="ico">⚙</span>Settings</button><button class="nav" onclick="alert('Boundary is designed to have no ads, no pop-ups and no tracking for ad targeting.')"><span class="ico">♡</span>About</button></nav>
 </main>
+
 <script>
-const matches=[const API_URL = 'https://boundary-cricket-api.santhoshselvamr.workers.dev/api/live';
+const API_URL =
+  'https://boundary-cricket-api.santhoshselvamr.workers.dev/api/live';
 
 let matches = [];
 let filter = 'Live';
@@ -30,26 +32,20 @@ function mapApiMatches(payload) {
   return (payload.data || []).map((m, i) => {
     const score = m.score || '';
     const parts = score.match(/^(.*?)\s+(\d+\/\d+)(?:\s+\(([^)]*)\))?/);
-    const teamA = m.team_a || 'Team A';
-    const teamB = m.team_b || 'Team B';
+    const live = /progress|live/i.test(m.state || '');
+    const finished = /complete|result|won|finished/i.test(m.state || '');
 
     return {
       id: m.match_id ?? i,
-      filter: /progress|live/i.test(m.state || '')
-        ? 'Live'
-        : /complete|result|won|finished/i.test(m.state || '')
-          ? 'Results' : 'Upcoming',
+      filter: live ? 'Live' : finished ? 'Results' : 'Upcoming',
       format: (m.format || 'CRICKET').toUpperCase(),
       series: m.series_name || m.match_desc || 'Cricket match',
-      status: /progress|live/i.test(m.state || '')
-        ? 'LIVE'
-        : /complete|result|won|finished/i.test(m.state || '')
-          ? 'RESULT' : 'UPCOMING',
-      a: teamA,
+      status: live ? 'LIVE' : finished ? 'RESULT' : 'UPCOMING',
+      a: m.team_a || 'Team A',
       af: '🏏',
       as: parts ? parts[2] : score || '—',
       ao: parts && parts[3] ? parts[3] : '',
-      b: teamB,
+      b: m.team_b || 'Team B',
       bf: '🏏',
       bs: '—',
       bo: '',
@@ -75,31 +71,154 @@ async function loadLiveMatches() {
       throw new Error('Unexpected API response');
     }
 
+    const previousFavourites = new Set(
+      matches.filter(m => m.fav).map(m => m.id)
+    );
     matches = mapApiMatches(payload);
+    matches.forEach(m => {
+      m.fav = previousFavourites.has(m.id);
+    });
+
     document.querySelector('.section-head small').textContent =
       'Live data · CricketLiveAPI';
     document.querySelector('.notice').textContent =
-      'Scores provided by CricketLiveAPI. Data refreshes periodically.';
+      'Scores supplied by CricketLiveAPI. Commentary and full scorecards are not connected yet.';
 
-    loadLiveMatches();
-setInterval(loadLiveMatches, 60000);
+    render();
   } catch (error) {
     list.innerHTML =
-      '<div class="empty">Could not load live scores. Please try again.</div>';
+      '<div class="empty">Could not load live scores. Please refresh and try again.</div>';
     document.querySelector('.section-head small').textContent =
       'Connection error';
   }
 }
+
+function render() {
+  const arr = matches.filter(m => m.filter === filter);
+  document.getElementById('listTitle').textContent =
+    filter === 'Live' ? 'Live matches' :
+    filter === 'Upcoming' ? 'Upcoming matches' : 'Recent results';
+
+  document.getElementById('matchList').innerHTML = arr.length
+    ? arr.map(m => `
+      <article class="match" onclick="openMatch(${m.id})">
+        <div class="matchtop">
+          <span>${m.format} · ${m.series}</span>
+          <span class="${m.status === 'LIVE' ? 'livebadge' : ''}">
+            ${m.status === 'LIVE' ? '● LIVE' : m.status}
+          </span>
+        </div>
+        <div class="teams">
+          <div>
+            <div class="team"><div class="flag">${m.af}</div><div class="teamname">${m.a}</div></div>
+            <div class="team"><div class="flag">${m.bf}</div><div class="teamname">${m.b}</div></div>
+          </div>
+          <div>
+            <div class="score">${m.as}</div><div class="overs">${m.ao}</div>
+            <div class="score" style="margin-top:18px">${m.bs}</div><div class="overs">${m.bo}</div>
+          </div>
+        </div>
+        <div class="matchfoot"><span>${m.match_desc || m.series}</span><strong>${m.summary}</strong></div>
+      </article>`).join('')
+    : '<div class="empty">No matches in this section right now.</div>';
+
+  renderFavourites();
+}
+
+function setFilter(f, el) {
+  filter = f;
+  document.querySelectorAll('.tab').forEach(x =>
+    x.classList.toggle('active', x === el)
+  );
+  render();
+}
+
+function showView(v, el) {
+  document.querySelectorAll('.view').forEach(x => x.classList.remove('active'));
+  document.getElementById(v + 'View').classList.add('active');
+  document.querySelectorAll('.nav').forEach(x =>
+    x.classList.toggle('active', x.dataset.view === v)
+  );
+  if (v === 'favourites') renderFavourites();
+}
+
+function openMatch(id) {
+  selected = id;
+  const m = matches.find(x => x.id === id);
+  if (!m) return;
+
+  showView('detail');
+  document.getElementById('detailContent').innerHTML = `
+    <div class="detail-card">
+      <h2>${m.series}</h2>
+      <div style="color:var(--red);font-size:11px;font-weight:800">${m.status}</div>
+      <div class="detail-score">
+        <div><div style="font-size:27px">${m.af}</div><strong>${m.as}</strong><small>${m.a}<br>${m.ao}</small></div>
+        <div class="vs">VS</div>
+        <div><div style="font-size:27px">${m.bf}</div><strong>${m.bs}</strong><small>${m.b}<br>${m.bo}</small></div>
+      </div>
+      <b>${m.detail}</b>
+      <button class="notify ${m.fav ? 'on' : ''}" onclick="toggleFav(${m.id})">
+        ${m.fav ? '★ Following this match' : '☆ Follow this match'}
+      </button>
+    </div>
+    <div class="subtabs">
+      <button class="${detailTab === 'Commentary' ? 'active' : ''}" onclick="setDetailTab('Commentary')">Commentary</button>
+      <button class="${detailTab === 'Scorecard' ? 'active' : ''}" onclick="setDetailTab('Scorecard')">Scorecard</button>
+    </div>
+    <div id="innings">${renderInnings(m)}</div>
+    <div class="notice">Live scores are connected. Ball-by-ball commentary and full scorecards are not connected yet.</div>`;
+}
+
+function renderInnings(m) {
+  if (detailTab === 'Scorecard') {
+    return '<div class="empty">Detailed scorecard is not connected yet.</div>';
+  }
+  return '<div class="empty">Live commentary is not connected yet.</div>';
+}
+
+function setDetailTab(t) {
+  detailTab = t;
+  openMatch(selected);
+}
+
+function toggleFav(id) {
+  const m = matches.find(x => x.id === id);
+  if (!m) return;
+  m.fav = !m.fav;
+  openMatch(id);
+  renderFavourites();
+}
+
+function renderFavourites() {
+  const fav = matches.filter(m => m.fav);
+  const el = document.getElementById('favContent');
+  if (!el) return;
+
+  el.innerHTML = fav.length
+    ? fav.map(m => `
+      <article class="match" onclick="openMatch(${m.id})">
+        <div class="matchtop"><span>${m.format}</span><span>${m.status}</span></div>
+        <b>${m.af} ${m.a} vs ${m.b} ${m.bf}</b>
+        <div class="matchfoot"><span>${m.series}</span><strong>${m.summary}</strong></div>
+      </article>`).join('')
+    : '<div class="empty">No followed matches yet. Open a match and tap Follow.</div>';
+}
+
+function toggleSwitch(el) {
+  el.classList.toggle('on');
+}
+
+loadLiveMatches();
+setInterval(loadLiveMatches, 60000);
+
+if ('serviceWorker' in navigator &&
+    (location.protocol === 'https:' || location.hostname === 'localhost')) {
+  window.addEventListener('load', () =>
+    navigator.serviceWorker.register('./sw.js').catch(() => {})
+  );
+}
+</script>
   
-];let filter='Live',selected=1,detailTab='Commentary';
-function render(){const arr=matches.filter(m=>m.filter===filter);document.getElementById('listTitle').textContent=filter==='Live'?'Live matches':filter==='Upcoming'?'Upcoming matches':'Recent results';document.getElementById('matchList').innerHTML=arr.length?arr.map(m=>`<article class="match" onclick="openMatch(${m.id})"><div class="matchtop"><span>${m.format}</span><span class="${m.status==='LIVE'?'livebadge':''}">${m.status==='LIVE'?'● LIVE':m.status}</span></div><div class="teams"><div><div class="team"><div class="flag">${m.af}</div><div class="teamname">${m.a}</div></div><div class="team"><div class="flag">${m.bf}</div><div class="teamname">${m.b}</div></div></div><div><div class="score">${m.as}</div><div class="overs">${m.ao}</div><div class="score" style="margin-top:18px">${m.bs}</div><div class="overs">${m.bo}</div></div></div><div class="matchfoot"><span>${m.series}</span><strong>${m.summary}</strong></div></article>`).join(''):'<div class="empty">No matches in this section yet.</div>';renderFavourites()}
-function setFilter(f,el){filter=f;document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===el));render()}
-function showView(v,el){document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));document.getElementById(v+'View').classList.add('active');document.querySelectorAll('.nav').forEach(x=>x.classList.toggle('active',x.dataset.view===v));if(v==='favourites')renderFavourites()}
-function openMatch(id){selected=id;const m=matches.find(x=>x.id===id);showView('detail');document.getElementById('detailContent').innerHTML=`<div class="detail-card"><h2>${m.series}</h2><div style="color:var(--red);font-size:11px;font-weight:800">${m.status==='LIVE'?'● LIVE MATCH':m.status}</div><div class="detail-score"><div><div style="font-size:27px">${m.af}</div><strong>${m.as}</strong><small>${m.a}<br>${m.ao}</small></div><div class="vs">VS</div><div><div style="font-size:27px">${m.bf}</div><strong>${m.bs}</strong><small>${m.b}<br>${m.bo}</small></div></div><b>${m.detail}</b><button class="notify ${m.fav?'on':''}" onclick="toggleFav(${m.id})">${m.fav?'★ Following this match':'☆ Follow this match'}</button></div><div class="subtabs"><button class="${detailTab==='Commentary'?'active':''}" onclick="setDetailTab('Commentary')">Commentary</button><button class="${detailTab==='Scorecard'?'active':''}" onclick="setDetailTab('Scorecard')">Scorecard</button></div><div id="innings">${renderInnings(m)}</div><div class="notice">Illustrative data only. This prototype is not connected to a live cricket feed.</div>`}
-function renderInnings(m){if(detailTab==='Scorecard')return `<div class="match"><b>Batting scorecard</b><div class="comment"><div><p><b>Sample batter 1</b></p><small>64 (38 balls) · 5 fours · 3 sixes</small></div></div><div class="comment"><div><p><b>Sample batter 2</b></p><small>31 (22 balls) · 2 fours · 1 six</small></div></div><div class="comment"><div><p><b>Bowling</b></p><small>Sample bowler · 3.2 overs · 28 runs · 1 wicket</small></div></div></div>`;return m.comments.length?m.comments.map(c=>`<div class="comment"><div class="ball">${c[1]}</div><div><small>${c[0]} overs</small><p>${c[2]}</p></div></div>`).join(''):'<div class="empty">Commentary will appear here when the match begins.</div>'}
-function setDetailTab(t){detailTab=t;openMatch(selected)}function toggleFav(id){const m=matches.find(x=>x.id===id);m.fav=!m.fav;openMatch(id);renderFavourites()}
-function renderFavourites(){const fav=matches.filter(m=>m.fav);const el=document.getElementById('favContent');if(el)el.innerHTML=fav.length?fav.map(m=>`<article class="match" onclick="openMatch(${m.id})"><div class="matchtop"><span>${m.format}</span><span>${m.status}</span></div><b>${m.af} ${m.a} vs ${m.b} ${m.bf}</b><div class="matchfoot"><span>${m.series}</span><strong>${m.summary}</strong></div></article>`).join(''):'<div class="empty">No followed matches yet. Open a match and tap Follow.</div>'}
-function toggleSwitch(el){el.classList.toggle('on')}
-render();
-if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) { window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {})); }
-</script></body></html>
+
+</body></html>
