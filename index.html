@@ -81,7 +81,8 @@ async function loadLiveMatches() {
     document.querySelector('.notice').textContent =
       'Scores provided by CricketLiveAPI. Data refreshes periodically.';
 
-    render();
+    loadLiveMatches();
+setInterval(loadLiveMatches, 60000);
   } catch (error) {
     list.innerHTML =
       '<div class="empty">Could not load live scores. Please try again.</div>';
