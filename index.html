@@ -32,7 +32,30 @@ let matches=[],filter='Live',selected=null,detailTab='Commentary';
 const favourites=new Set();
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function stateOf(m){return String(m.state||m.status||m.status_detail||'');}
-function liveOf(m){return /in progress|live|innings break|stumps|drinks/i.test(stateOf(m));}
+function parseApiDate(value){
+ if(!value)return null;
+ const raw=String(value).trim();
+ // API examples: "Oct 18, 08:00 GMT" or "Oct 22, 15:00 GMT"
+ const match=raw.match(/^([A-Za-z]{3}\s+\d{1,2}),?\s+(\d{1,2}:\d{2})\s*(GMT|UTC)?$/i);
+ if(match){
+  const year=new Date().getUTCFullYear();
+  let d=new Date(`${match[1]} ${year} ${match[2]} UTC`);
+  if(!Number.isNaN(d.getTime())){
+   const now=new Date();
+   if(d.getTime()>now.getTime()+180*24*60*60*1000)d.setUTCFullYear(year-1);
+   return d;
+  }
+ }
+ const d=new Date(raw);
+ return Number.isNaN(d.getTime())?null:d;
+}
+function isWithinMatchWindow(m){
+ const now=Date.now(), start=parseApiDate(m.date), end=parseApiDate(m.end_date);
+ if(start && start.getTime()>now+6*60*60*1000)return false;
+ if(end && end.getTime()<now-6*60*60*1000)return false;
+ return true;
+}
+function liveOf(m){return /in progress|live|innings break|stumps|drinks/i.test(stateOf(m)) && isWithinMatchWindow(m);}
 function finishedOf(m){return /complete|result|won|finished|draw|abandoned|no result/i.test(stateOf(m));}
 function scoreOf(t){if(!t)return '—';if(t.score)return String(t.score);const innings=Array.isArray(t.innings)?t.innings:[];const x=innings[innings.length-1];return x&&x.runs!=null&&x.wickets!=null?`${x.runs}/${x.wickets}`:'—';}
 function oversOf(t){if(!t)return '';if(t.overs!==undefined&&t.overs!==null&&String(t.overs)!=='')return `(${t.overs} ov)`;const x=String(t.score||'').match(/\(([^)]*ov)\)/i);return x?`(${x[1]})`:'';}
