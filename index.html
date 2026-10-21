@@ -2,257 +2,83 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Boundary — Ad-free Cricket</title>
-<link rel="manifest" href="./manifest.webmanifest"><meta name="theme-color" content="#0b1220"><link rel="icon" href="./icon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#0b1220"><title>Boundary — Ad-free Cricket</title>
+<link rel="manifest" href="./manifest.webmanifest"><link rel="icon" href="./icon.svg" type="image/svg+xml">
 <style>
-:root{--bg:#0b1220;--panel:#121d30;--panel2:#17243a;--line:#26364f;--text:#f4f7fb;--muted:#9eacc2;--green:#5de0a2;--orange:#ffbd69;--red:#ff6d7a}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}.app{max-width:520px;min-height:100vh;margin:auto;padding-bottom:86px;background:radial-gradient(ellipse at top,#172744 0%,var(--bg) 45%)}header{padding:22px 18px 12px;display:flex;align-items:center;justify-content:space-between}.brand{display:flex;align-items:center;gap:10px}.logo{width:38px;height:38px;border-radius:13px;background:var(--green);color:#082016;display:grid;place-items:center;font-size:21px;font-weight:900}.brand h1{font-size:21px;letter-spacing:-.7px;margin:0}.brand p{margin:0;color:var(--muted);font-size:11px;letter-spacing:1.5px;text-transform:uppercase}.iconbtn{border:1px solid var(--line);background:var(--panel);color:var(--text);width:42px;height:42px;border-radius:14px;font-size:18px;cursor:pointer}.tagline{padding:0 18px 17px;color:var(--muted);font-size:13px}.live-strip{margin:0 18px 17px;padding:12px 14px;border:1px solid #284c49;border-radius:15px;background:#112a2b;display:flex;align-items:center;gap:10px}.pulse{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 5px #5de0a21c}.live-strip b{font-size:13px}.live-strip span{margin-left:auto;color:#a6d8c2;font-size:11px}.tabs{display:flex;gap:7px;padding:0 18px 17px}.tab{flex:1;border:1px solid var(--line);border-radius:12px;padding:10px 5px;background:transparent;color:var(--muted);font-weight:650;cursor:pointer}.tab.active{background:var(--green);border-color:var(--green);color:#092117}.section-head{padding:0 18px 10px;display:flex;justify-content:space-between;align-items:center}.section-head h2{font-size:16px;margin:0}.section-head small{color:var(--muted)}.match{margin:0 18px 12px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,#16243a,#111a2a);padding:15px;cursor:pointer;transition:transform .15s}.match:active{transform:scale(.99)}.matchtop{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:11px;margin-bottom:13px}.livebadge{color:var(--red);font-weight:800;letter-spacing:.7px}.teams{display:grid;grid-template-columns:1fr auto;gap:8px}.team{display:flex;align-items:center;gap:10px;margin:7px 0}.flag{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:#263956;font-size:19px}.teamname{font-weight:700}.score{font-weight:800;font-size:17px;text-align:right}.overs{font-size:11px;color:var(--muted);text-align:right}.matchfoot{margin-top:12px;padding-top:11px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:8px;color:var(--muted);font-size:12px}.matchfoot strong{color:var(--green);font-weight:650}.empty{margin:0 18px;padding:28px 18px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:16px}.bottom{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(520px,100%);padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:#0c1423f2;backdrop-filter:blur(14px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);z-index:3}.nav{border:0;background:none;color:var(--muted);padding:5px 0;cursor:pointer;font-size:11px}.nav .ico{display:block;font-size:19px;margin-bottom:3px}.nav.active{color:var(--green)}.view{display:none}.view.active{display:block}.detail{padding:0 18px}.back{border:0;background:none;color:var(--green);font-weight:700;padding:8px 0 16px;cursor:pointer}.detail-card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:18px;text-align:center}.detail-card h2{font-size:14px;color:var(--muted);font-weight:600}.detail-score{display:flex;justify-content:space-around;align-items:center;margin:22px 0}.detail-score strong{display:block;font-size:24px}.detail-score small{color:var(--muted)}.vs{color:var(--muted);font-size:12px}.notify{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:12px;padding:11px 14px;cursor:pointer;margin-top:13px;width:100%;font-weight:650}.notify.on{border-color:var(--green);color:var(--green)}.subtabs{display:flex;gap:8px;margin:17px 0 12px}.subtabs button{flex:1;background:var(--panel);border:1px solid var(--line);color:var(--muted);padding:9px;border-radius:10px}.subtabs button.active{color:var(--text);border-color:var(--green)}.comment{padding:13px 0;border-bottom:1px solid var(--line);display:flex;gap:12px}.ball{width:35px;height:35px;flex-shrink:0;border-radius:10px;background:var(--panel2);display:grid;place-items:center;color:var(--green);font-weight:800}.comment p{margin:0;font-size:13px}.comment small{color:var(--muted)}.notice{margin:18px;padding:12px 14px;border-radius:12px;background:#24251f;color:#d7c9a4;font-size:12px}.toggleline{display:flex;justify-content:space-between;align-items:center;padding:15px 0;border-bottom:1px solid var(--line)}.toggleline span{color:var(--muted);font-size:12px;display:block}.switch{width:46px;height:26px;border-radius:30px;background:#33445c;position:relative;border:0;cursor:pointer}.switch:after{content:'';position:absolute;width:20px;height:20px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.15s}.switch.on{background:var(--green)}.switch.on:after{left:23px;background:#0b2118}.settings{padding:0 18px}.settings h2{font-size:19px}.smallprint{font-size:11px;color:var(--muted);text-align:center;padding:20px 22px}
-</style></head><body><main class="app">
+:root{--bg:#0b1220;--panel:#121d30;--panel2:#17243a;--line:#26364f;--text:#f4f7fb;--muted:#9eacc2;--green:#5de0a2;--red:#ff6d7a}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.45 system-ui,sans-serif}.app{max-width:520px;min-height:100vh;margin:auto;padding-bottom:86px;background:radial-gradient(ellipse at top,#172744 0%,var(--bg) 45%)}
+header{padding:22px 18px 12px;display:flex;align-items:center;justify-content:space-between}.brand{display:flex;align-items:center;gap:10px}.logo{width:38px;height:38px;border-radius:13px;background:var(--green);color:#082016;display:grid;place-items:center;font-size:21px;font-weight:900}.brand h1{font-size:21px;margin:0}.brand p{margin:0;color:var(--muted);font-size:11px;letter-spacing:1.5px;text-transform:uppercase}.iconbtn{border:1px solid var(--line);background:var(--panel);color:var(--text);width:42px;height:42px;border-radius:14px;font-size:18px}.tagline{padding:0 18px 17px;color:var(--muted);font-size:13px}.live-strip{margin:0 18px 17px;padding:12px 14px;border:1px solid #284c49;border-radius:15px;background:#112a2b;display:flex;align-items:center;gap:10px}.pulse{width:8px;height:8px;border-radius:50%;background:var(--green)}.live-strip b{font-size:13px}.live-strip span{margin-left:auto;color:#a6d8c2;font-size:11px}
+.tabs{display:flex;gap:7px;padding:0 18px 17px}.tab{flex:1;border:1px solid var(--line);border-radius:12px;padding:10px 5px;background:transparent;color:var(--muted);font-weight:650}.tab.active{background:var(--green);color:#092117}.section-head{padding:0 18px 10px;display:flex;justify-content:space-between;align-items:center;gap:10px}.section-head h2{font-size:16px;margin:0}.section-head small{color:var(--muted);text-align:right}
+.match{margin:0 18px 12px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,#16243a,#111a2a);padding:15px;cursor:pointer}.matchtop{display:flex;justify-content:space-between;gap:8px;color:var(--muted);font-size:11px;margin-bottom:13px}.livebadge{color:var(--red);font-weight:800}.teams{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}.team{display:flex;align-items:center;gap:10px;margin:7px 0}.flag{width:34px;height:34px;flex-shrink:0;border-radius:11px;display:grid;place-items:center;background:#263956;font-size:19px}.teamname{font-weight:700;overflow-wrap:anywhere}.score{font-weight:800;font-size:17px;text-align:right;white-space:nowrap}.overs{font-size:11px;color:var(--muted);text-align:right}.matchfoot{margin-top:12px;padding-top:11px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:8px;color:var(--muted);font-size:12px}.matchfoot strong{color:var(--green);text-align:right}.empty{margin:0 18px;padding:28px 18px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:16px}
+.bottom{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(520px,100%);padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:#0c1423f2;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);z-index:3}.nav{border:0;background:none;color:var(--muted);padding:5px 0;font-size:11px}.nav .ico{display:block;font-size:19px;margin-bottom:3px}.nav.active{color:var(--green)}.view{display:none}.view.active{display:block}.detail{padding:0 18px}.back{border:0;background:none;color:var(--green);font-weight:700;padding:8px 0 16px}.detail-card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:18px;text-align:center}.detail-card h2{font-size:14px;color:var(--muted)}.detail-score{display:flex;justify-content:space-around;align-items:center;gap:8px;margin:22px 0}.detail-score strong{display:block;font-size:24px}.detail-score small{color:var(--muted)}.vs{color:var(--muted);font-size:12px}.notify{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:12px;padding:11px 14px;margin-top:13px;width:100%;font-weight:650}.notify.on{border-color:var(--green);color:var(--green)}.subtabs{display:flex;gap:8px;margin:17px 0 12px}.subtabs button{flex:1;background:var(--panel);border:1px solid var(--line);color:var(--muted);padding:9px;border-radius:10px}.subtabs button.active{color:var(--text);border-color:var(--green)}.notice{margin:18px;padding:12px 14px;border-radius:12px;background:#24251f;color:#d7c9a4;font-size:12px}.toggleline{display:flex;justify-content:space-between;align-items:center;padding:15px 0;border-bottom:1px solid var(--line);gap:12px}.toggleline span{color:var(--muted);font-size:12px;display:block}.switch{width:46px;height:26px;border-radius:30px;background:#33445c;position:relative;border:0}.switch:after{content:'';position:absolute;width:20px;height:20px;left:3px;top:3px;background:white;border-radius:50%}.switch.on{background:var(--green)}.switch.on:after{left:23px}.settings{padding:0 18px}.settings h2{font-size:19px}.smallprint{font-size:11px;color:var(--muted);text-align:center;padding:20px 22px}
+</style></head>
+<body><main class="app">
 <header><div class="brand"><div class="logo">B</div><div><h1>boundary</h1><p>Cricket. Nothing else.</p></div></div><button class="iconbtn" onclick="showView('settings')" aria-label="Settings">⚙</button></header>
 <div class="tagline">Every ball matters. Not a single ad.</div>
 <section id="scoresView" class="view active"><div class="live-strip"><i class="pulse"></i><b>Live cricket, minus the noise</b><span>NO ADS · EVER</span></div>
-<div class="tabs"><button class="tab active" data-filter="Live" onclick="setFilter('Live',this)">🔴 Live</button><button class="tab" data-filter="Upcoming" onclick="setFilter('Upcoming',this)">Upcoming</button><button class="tab" data-filter="Results" onclick="setFilter('Results',this)">Results</button></div>
-<div class="section-head"><h2 id="listTitle">Live matches</h2><small>Sample data · prototype</small></div><div id="matchList"></div>
-<div class="notice">Prototype preview: scores and commentary below are illustrative sample data, not a live feed.</div></section>
+<div class="tabs"><button class="tab active" onclick="setFilter('Live',this)">🔴 Live</button><button class="tab" onclick="setFilter('Upcoming',this)">Upcoming</button><button class="tab" onclick="setFilter('Results',this)">Results</button></div>
+<div class="section-head"><h2 id="listTitle">Live matches</h2><small id="connectionLabel">Connecting to live scores…</small></div><div id="matchList"><div class="empty">Loading live matches…</div></div>
+<div class="notice" id="notice">Connecting to CricketLiveAPI…</div></section>
 <section id="detailView" class="view"><div class="detail"><button class="back" onclick="showView('scores')">← All matches</button><div id="detailContent"></div></div></section>
 <section id="favouritesView" class="view"><div class="settings"><h2>Following</h2><p style="color:var(--muted)">Your teams, your matches. No clutter.</p><div id="favContent"></div></div></section>
-<section id="settingsView" class="view"><div class="settings"><h2>Preferences</h2><p style="color:var(--muted)">Make cricket work for you.</p><div class="toggleline"><div><b>Match notifications</b><span>Get alerts for followed matches</span></div><button class="switch on" id="globalNotify" onclick="toggleSwitch(this)"></button></div><div class="toggleline"><div><b>Wicket alerts</b><span>Notify when a wicket falls</span></div><button class="switch on" onclick="toggleSwitch(this)"></button></div><div class="toggleline"><div><b>Match start reminders</b><span>Get notified before play begins</span></div><button class="switch" onclick="toggleSwitch(this)"></button></div><div class="toggleline"><div><b>Ads</b><span>Boundary will stay ad-free</span></div><b style="color:var(--green)">OFF FOREVER</b></div><p class="smallprint">Boundary prototype v0.1<br>Sample match data only. Live data requires a licensed provider.</p></div></section>
-<nav class="bottom"><button class="nav active" data-view="scores" onclick="showView('scores',this)"><span class="ico">🏏</span>Scores</button><button class="nav" data-view="favourites" onclick="showView('favourites',this)"><span class="ico">☆</span>Following</button><button class="nav" data-view="settings" onclick="showView('settings',this)"><span class="ico">⚙</span>Settings</button><button class="nav" onclick="alert('Boundary is designed to have no ads, no pop-ups and no tracking for ad targeting.')"><span class="ico">♡</span>About</button></nav>
+<section id="settingsView" class="view"><div class="settings"><h2>Preferences</h2><p style="color:var(--muted)">Make cricket work for you.</p>
+<div class="toggleline"><div><b>Match notifications</b><span>Get alerts for followed matches</span></div><button class="switch on" onclick="toggleSwitch(this)"></button></div><div class="toggleline"><div><b>Wicket alerts</b><span>Notify when a wicket falls</span></div><button class="switch on" onclick="toggleSwitch(this)"></button></div><div class="toggleline"><div><b>Match start reminders</b><span>Get notified before play begins</span></div><button class="switch" onclick="toggleSwitch(this)"></button></div><div class="toggleline"><div><b>Ads</b><span>Boundary will stay ad-free</span></div><b style="color:var(--green)">OFF FOREVER</b></div><p class="smallprint">Boundary prototype v0.3<br>Live match data via CricketLiveAPI. Commentary and full scorecards are not connected yet.</p></div></section>
+<nav class="bottom"><button class="nav active" data-view="scores" onclick="showView('scores')"><span class="ico">🏏</span>Scores</button><button class="nav" data-view="favourites" onclick="showView('favourites')"><span class="ico">☆</span>Following</button><button class="nav" data-view="settings" onclick="showView('settings')"><span class="ico">⚙</span>Settings</button><button class="nav" onclick="showView('about')"><span class="ico">♡</span>About</button></nav>
 </main>
-
-
 <script>
-const API_URL = 'https://boundary-cricket-api.santhoshselvamr.workers.dev/api/live';
-
-let matches = [];
-let filter = 'Live';
-let selected = null;
-let detailTab = 'Commentary';
-
-function mapApiMatches(payload) {
-  return (payload.data || []).map((m, i) => {
-    const score = m.score || '';
-    const parts = score.match(/^(.*?)\s+(\d+\/\d+)(?:\s+\(([^)]*)\))?/);
-    const live = /progress|live/i.test(m.state || '');
-    const finished = /complete|result|won|finished/i.test(m.state || '');
-
-    return {
-      id: m.match_id ?? i,
-      filter: live ? 'Live' : finished ? 'Results' : 'Upcoming',
-      format: (m.format || 'CRICKET').toUpperCase(),
-      series: m.series_name || m.match_desc || 'Cricket match',
-      status: live ? 'LIVE' : finished ? 'RESULT' : 'UPCOMING',
-      a: m.team_a || 'Team A',
-      af: '🏏',
-      as: parts ? parts[2] : score || '—',
-      ao: parts && parts[3] ? parts[3] : '',
-      b: m.team_b || 'Team B',
-      bf: '🏏',
-      bs: '—',
-      bo: '',
-      summary: m.live_inning || m.state || 'Match details',
-      detail: score || m.state || 'Live match information',
-      fav: false,
-      comments: []
-    };
-  });
+'use strict';
+const API_URL='https://boundary-cricket-api.santhoshselvamr.workers.dev/api/live';
+let matches=[],filter='Live',selected=null,detailTab='Commentary';
+const favourites=new Set();
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function stateOf(m){return String(m.state||m.status||m.status_detail||'');}
+function liveOf(m){return /in progress|live|innings break|stumps|drinks/i.test(stateOf(m));}
+function finishedOf(m){return /complete|result|won|finished|draw|abandoned|no result/i.test(stateOf(m));}
+function scoreOf(t){if(!t)return '—';if(t.score)return String(t.score);const innings=Array.isArray(t.innings)?t.innings:[];const x=innings[innings.length-1];return x&&x.runs!=null&&x.wickets!=null?`${x.runs}/${x.wickets}`:'—';}
+function oversOf(t){if(!t)return '';if(t.overs!==undefined&&t.overs!==null&&String(t.overs)!=='')return `(${t.overs} ov)`;const x=String(t.score||'').match(/\(([^)]*ov)\)/i);return x?`(${x[1]})`:'';}
+function mapApiMatches(payload){
+ return (Array.isArray(payload.data)?payload.data:[]).map((m,i)=>{
+  const a=m.first_team||{},b=m.second_team||{},s=stateOf(m),live=liveOf(m),done=finishedOf(m);
+  return {id:String(m.match_id??i),filter:live?'Live':done?'Results':'Upcoming',
+   format:String(m.format||'CRICKET').toUpperCase(),series:m.series_name||m.match_desc||m.title||'Cricket match',matchDesc:m.match_desc||'',
+   status:live?'LIVE':done?'RESULT':'UPCOMING',
+   a:a.name||a.full_name||'Team A',af:'🏏',as:scoreOf(a),ao:oversOf(a),
+   b:b.name||b.full_name||'Team B',bf:'🏏',bs:scoreOf(b),bo:oversOf(b),
+   summary:m.live_inning||m.status_detail||s||'Match details',
+   detail:[a.score,b.score].filter(Boolean).join(' · ')||m.score||m.status_detail||s||'Live match information',
+   fav:favourites.has(String(m.match_id??i))};
+ });
 }
-
-async function loadLiveMatches() {
-  const list = document.getElementById('matchList');
-  list.innerHTML = '<div class="empty">Loading live matches…</div>';
-
-  try {
-    const response = await fetch(API_URL);
-    if (!response.ok) throw new Error('API request failed');
-
-    const payload = await response.json();
-    if (!payload.success || !Array.isArray(payload.data)) {
-      throw new Error('Unexpected API response');
-    }
-
-    const previousFavourites = new Set(
-      matches.filter(m => m.fav).map(m => m.id)
-    );
-
-    matches = mapApiMatches(payload);
-    matches.forEach(m => {
-      m.fav = previousFavourites.has(m.id);
-    });
-
-    document.querySelector('.section-head small').textContent =
-      'Live data · CricketLiveAPI';
-
-    document.querySelector('.notice').textContent =
-      'Live match data connected. Commentary and detailed scorecards are not connected yet.';
-
-    render();
-  } catch (error) {
-    list.innerHTML =
-      '<div class="empty">Unable to load live scores. Please refresh and try again.</div>';
-    document.querySelector('.section-head small').textContent =
-      'Connection error';
-  }
-}
-
-function render() {
-  const arr = matches.filter(m => m.filter === filter);
-
-  document.getElementById('listTitle').textContent =
-    filter === 'Live' ? 'Live matches' :
-    filter === 'Upcoming' ? 'Upcoming matches' : 'Recent results';
-
-  document.getElementById('matchList').innerHTML = arr.length
-    ? arr.map(m => `
-      <article class="match" onclick="openMatch(${m.id})">
-        <div class="matchtop">
-          <span>${m.format} · ${m.series}</span>
-          <span class="${m.status === 'LIVE' ? 'livebadge' : ''}">
-            ${m.status === 'LIVE' ? '● LIVE' : m.status}
-          </span>
-        </div>
-        <div class="teams">
-          <div>
-            <div class="team">
-              <div class="flag">${m.af}</div>
-              <div class="teamname">${m.a}</div>
-            </div>
-            <div class="team">
-              <div class="flag">${m.bf}</div>
-              <div class="teamname">${m.b}</div>
-            </div>
-          </div>
-          <div>
-            <div class="score">${m.as}</div>
-            <div class="overs">${m.ao}</div>
-            <div class="score" style="margin-top:18px">${m.bs}</div>
-            <div class="overs">${m.bo}</div>
-          </div>
-        </div>
-        <div class="matchfoot">
-          <span>${m.series}</span>
-          <strong>${m.summary}</strong>
-        </div>
-      </article>`).join('')
-    : '<div class="empty">No matches in this section right now.</div>';
-
-  renderFavourites();
-}
-
-function setFilter(f, el) {
-  filter = f;
-  document.querySelectorAll('.tab').forEach(x =>
-    x.classList.toggle('active', x === el)
-  );
+async function loadLiveMatches(){
+ const list=document.getElementById('matchList');
+ try{
+  const r=await fetch(API_URL,{method:'GET',cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);
+  const p=await r.json();if(!p||p.success!==true||!Array.isArray(p.data))throw Error('Unexpected API response');
+  const old=new Set(matches.filter(m=>m.fav).map(m=>String(m.id)));matches=mapApiMatches(p);
+  matches.forEach(m=>{m.fav=favourites.has(m.id)||old.has(m.id);if(m.fav)favourites.add(m.id);});
+  document.getElementById('connectionLabel').textContent='Live data · CricketLiveAPI';
+  document.getElementById('notice').textContent='Live match data connected. Commentary and detailed scorecards are not connected yet.';
   render();
+ }catch(e){
+  document.getElementById('connectionLabel').textContent='Connection error';
+  document.getElementById('notice').textContent='Could not refresh live scores. Check your connection and try again.';
+  if(!matches.length)list.innerHTML='<div class="empty">Unable to load live scores. Please refresh and try again.</div>';
+ }
 }
-
-function showView(v, el) {
-  document.querySelectorAll('.view').forEach(x =>
-    x.classList.remove('active')
-  );
-  document.getElementById(v + 'View').classList.add('active');
-
-  document.querySelectorAll('.nav').forEach(x =>
-    x.classList.toggle('active', x.dataset.view === v)
-  );
-
-  if (v === 'favourites') renderFavourites();
+function render(){
+ const a=matches.filter(m=>m.filter===filter);
+ document.getElementById('listTitle').textContent=filter==='Live'?'Live matches':filter==='Upcoming'?'Upcoming matches':'Recent results';
+ document.getElementById('matchList').innerHTML=a.length?a.map(m=>`<article class="match" onclick="openMatch('${esc(m.id)}')"><div class="matchtop"><span>${esc(m.format)} · ${esc(m.series)}</span><span class="${m.status==='LIVE'?'livebadge':''}">${m.status==='LIVE'?'● LIVE':esc(m.status)}</span></div><div class="teams"><div><div class="team"><div class="flag">${m.af}</div><div class="teamname">${esc(m.a)}</div></div><div class="team"><div class="flag">${m.bf}</div><div class="teamname">${esc(m.b)}</div></div></div><div><div class="score">${esc(m.as)}</div><div class="overs">${esc(m.ao)}</div><div class="score" style="margin-top:18px">${esc(m.bs)}</div><div class="overs">${esc(m.bo)}</div></div></div><div class="matchfoot"><span>${esc(m.matchDesc||m.series)}</span><strong>${esc(m.summary)}</strong></div></article>`).join(''):`<div class="empty">No ${filter.toLowerCase()} matches returned by the API right now.</div>`;
+ renderFavourites();
 }
-
-function openMatch(id) {
-  selected = id;
-  const m = matches.find(x => x.id === id);
-  if (!m) return;
-
-  showView('detail');
-
-  document.getElementById('detailContent').innerHTML = `
-    <div class="detail-card">
-      <h2>${m.series}</h2>
-      <div style="color:var(--red);font-size:11px;font-weight:800">${m.status}</div>
-      <div class="detail-score">
-        <div>
-          <div style="font-size:27px">${m.af}</div>
-          <strong>${m.as}</strong>
-          <small>${m.a}<br>${m.ao}</small>
-        </div>
-        <div class="vs">VS</div>
-        <div>
-          <div style="font-size:27px">${m.bf}</div>
-          <strong>${m.bs}</strong>
-          <small>${m.b}<br>${m.bo}</small>
-        </div>
-      </div>
-      <b>${m.detail}</b>
-      <button class="notify ${m.fav ? 'on' : ''}"
-        onclick="toggleFav(${m.id})">
-        ${m.fav ? '★ Following this match' : '☆ Follow this match'}
-      </button>
-    </div>
-    <div class="subtabs">
-      <button class="${detailTab === 'Commentary' ? 'active' : ''}"
-        onclick="setDetailTab('Commentary')">Commentary</button>
-      <button class="${detailTab === 'Scorecard' ? 'active' : ''}"
-        onclick="setDetailTab('Scorecard')">Scorecard</button>
-    </div>
-    <div id="innings">${renderInnings()}</div>
-    <div class="notice">
-      Live scores are connected. Commentary and full scorecards are not connected yet.
-    </div>`;
-}
-
-function renderInnings() {
-  return detailTab === 'Scorecard'
-    ? '<div class="empty">Detailed scorecard is not connected yet.</div>'
-    : '<div class="empty">Live commentary is not connected yet.</div>';
-}
-
-function setDetailTab(t) {
-  detailTab = t;
-  openMatch(selected);
-}
-
-function toggleFav(id) {
-  const m = matches.find(x => x.id === id);
-  if (!m) return;
-  m.fav = !m.fav;
-  openMatch(id);
-  renderFavourites();
-}
-
-function renderFavourites() {
-  const fav = matches.filter(m => m.fav);
-  const el = document.getElementById('favContent');
-  if (!el) return;
-
-  el.innerHTML = fav.length
-    ? fav.map(m => `
-      <article class="match" onclick="openMatch(${m.id})">
-        <div class="matchtop">
-          <span>${m.format}</span><span>${m.status}</span>
-        </div>
-        <b>${m.af} ${m.a} vs ${m.b} ${m.bf}</b>
-        <div class="matchfoot">
-          <span>${m.series}</span><strong>${m.summary}</strong>
-        </div>
-      </article>`).join('')
-    : '<div class="empty">No followed matches yet. Open a match and tap Follow.</div>';
-}
-
-function toggleSwitch(el) {
-  el.classList.toggle('on');
-}
-
-loadLiveMatches();
-setInterval(loadLiveMatches, 60000);
-
-if ('serviceWorker' in navigator &&
-    (location.protocol === 'https:' || location.hostname === 'localhost')) {
-  window.addEventListener('load', () =>
-    navigator.serviceWorker.register('./sw.js').catch(() => {})
-  );
-}
-    </script>
-  
-
+function setFilter(f,el){filter=f;document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===el));render();}
+function showView(v){if(v==='about'){alert('Boundary is designed to have no ads, no pop-ups and no ad-targeting trackers.');return;}document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));const t=document.getElementById(v+'View');if(t)t.classList.add('active');document.querySelectorAll('.nav').forEach(x=>x.classList.toggle('active',x.dataset.view===v));if(v==='favourites')renderFavourites();}
+function openMatch(id){selected=String(id);const m=matches.find(x=>String(x.id)===selected);if(!m)return;showView('detail');document.getElementById('detailContent').innerHTML=`<div class="detail-card"><h2>${esc(m.series)}</h2><div style="color:${m.status==='LIVE'?'var(--red)':'var(--muted)'};font-size:11px;font-weight:800">${esc(m.status)}</div><div class="detail-score"><div><div style="font-size:27px">${m.af}</div><strong>${esc(m.as)}</strong><small>${esc(m.a)}<br>${esc(m.ao)}</small></div><div class="vs">VS</div><div><div style="font-size:27px">${m.bf}</div><strong>${esc(m.bs)}</strong><small>${esc(m.b)}<br>${esc(m.bo)}</small></div></div><b>${esc(m.detail)}</b><button class="notify ${m.fav?'on':''}" onclick="toggleFav('${esc(m.id)}')">${m.fav?'★ Following this match':'☆ Follow this match'}</button></div><div class="subtabs"><button class="${detailTab==='Commentary'?'active':''}" onclick="setDetailTab('Commentary')">Commentary</button><button class="${detailTab==='Scorecard'?'active':''}" onclick="setDetailTab('Scorecard')">Scorecard</button></div><div>${detailTab==='Scorecard'?'<div class="empty">Detailed scorecard is not connected yet.</div>':'<div class="empty">Live commentary is not connected yet.</div>'}</div><div class="notice">Live scores are connected. Commentary and full scorecards are not connected yet.</div>`;}
+function setDetailTab(t){detailTab=t;openMatch(selected);}
+function toggleFav(id){const m=matches.find(x=>String(x.id)===String(id));if(!m)return;m.fav=!m.fav;if(m.fav)favourites.add(m.id);else favourites.delete(m.id);openMatch(m.id);renderFavourites();render();}
+function renderFavourites(){const el=document.getElementById('favContent');if(!el)return;const a=matches.filter(m=>m.fav);el.innerHTML=a.length?a.map(m=>`<article class="match" onclick="openMatch('${esc(m.id)}')"><div class="matchtop"><span>${esc(m.format)}</span><span>${esc(m.status)}</span></div><b>${m.af} ${esc(m.a)} vs ${esc(m.b)} ${m.bf}</b><div class="matchfoot"><span>${esc(m.series)}</span><strong>${esc(m.summary)}</strong></div></article>`).join(''):'<div class="empty">No followed matches yet. Open a match and tap Follow.</div>';}
+function toggleSwitch(el){el.classList.toggle('on');}
+loadLiveMatches();setInterval(loadLiveMatches,60000);
+if('serviceWorker'in navigator&&(location.protocol==='https:'||location.hostname==='localhost'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+</script>
 </body></html>
